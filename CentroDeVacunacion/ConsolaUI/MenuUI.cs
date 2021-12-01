@@ -11,6 +11,7 @@ namespace CentroDeVacunacion.ConsolaUI
     {
         private CentroVacunatorio centroVacunatorio = new CentroVacunatorio();
         private PersonaIO personaIO = new PersonaIO();
+        private VacunasIO vacunaIO = new VacunasIO();
 
         public void MenuPrincipal()
         {
@@ -21,12 +22,13 @@ namespace CentroDeVacunacion.ConsolaUI
 
                 Console.WriteLine("Centro de Vacunacion COIVD-19");
                 Console.WriteLine("1. Registrar Persona");
-                Console.WriteLine("2. Registrar Vacunacion");
+                Console.WriteLine("2. Registrar Aplicacion de Vacuna");
                 Console.WriteLine("3. Ver registro de Personas Ingresadas");
                 Console.WriteLine("4. Ver Vacunas ingresadas");
+                Console.WriteLine("5. Ingresar Vacuna al registro");
                 Console.WriteLine("0. Salir");
 
-                int opcion = this.LeerOpcionValida(new List<int>() { 1, 2, 3, 4, 0 });
+                int opcion = this.LeerOpcionValida(new List<int>() { 1, 2, 3, 4, 5, 0 });
 
                 switch (opcion)
                 {
@@ -47,7 +49,12 @@ namespace CentroDeVacunacion.ConsolaUI
                         }
                     case 4:
                         {
-                            this.IngresarPersona();
+                            this.ListarVacuna();
+                            break;
+                        }
+                    case 5:
+                        {
+                            this.IngresarVacuna();
                             break;
                         }
                     case 0:
@@ -70,6 +77,17 @@ namespace CentroDeVacunacion.ConsolaUI
         private void ListarPersonas()
         {
             this.personaIO.ListarPersonas(this.centroVacunatorio.ObtenerPersonas());
+        }
+
+        private void IngresarVacuna()
+        {
+            Vacuna nuevaVacuna = this.vacunaIO.IngresarVacuna();
+            this.centroVacunatorio.RegistrarVacuna(nuevaVacuna);
+        }
+
+        private void ListarVacuna()
+        {
+            this.vacunaIO.ListarVacunas(this.centroVacunatorio.ObtenerVacuna());
         }
 
         private int LeerOpcionValida(List<int> opcionesValidas)

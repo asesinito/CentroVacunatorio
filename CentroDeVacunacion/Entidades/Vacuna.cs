@@ -9,15 +9,16 @@ namespace CentroDeVacunacion.Entidades
     class Vacuna
     {
         public string Nombre { get; private set; }
-        public string Dosis { get; private set; }
 
-        public DateTime Hora { get; private set; }
+        public string PaisDeOrigen { get; private set; }
 
-        public Vacuna(string nombre, string dosis, DateTime hora)
+        public DateTime FechaDeVencimiento { get; private set; }
+
+        public Vacuna(string nombre, string paisDeOrigen, DateTime fechaDeVencimiento)
         {
             this.Nombre = nombre;
-            this.Dosis = dosis;
-            this.Hora = hora;
+            this.PaisDeOrigen = paisDeOrigen;
+            this.FechaDeVencimiento = fechaDeVencimiento;
         }
     }
 }

@@ -11,10 +11,15 @@ namespace CentroDeVacunacion.Entidades
         public Persona Persona { get; private set; }
         public Vacuna Vacuna { get; private set; }
 
-        public PersonasVacunadas(Persona persona, Vacuna vacuna)
+        public string Dosis { get; private set; }
+
+        public DateTime HoraDeVacunacion = DateTime.Now;
+
+        public PersonasVacunadas(Persona persona, Vacuna vacuna, string dosis)
         {
             this.Persona = persona;
             this.Vacuna = vacuna;
+            this.Dosis = dosis;
         }
 
         public PersonasVacunadas() { }
