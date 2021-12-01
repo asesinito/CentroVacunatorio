@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace CentroDeVacunacion.Entidades
 {
-    class PersonasVacunadas
+    class PersonaVacunada
     {
         public Persona Persona { get; private set; }
         public Vacuna Vacuna { get; private set; }
 
-        public string Dosis { get; private set; }
+        public int Dosis { get; private set; }
 
-        public DateTime HoraDeVacunacion = DateTime.Now;
+        public DateTime FechaYHoraDeVacunacion = DateTime.Now;
 
-        public PersonasVacunadas(Persona persona, Vacuna vacuna, string dosis)
+        public PersonaVacunada(Persona persona, Vacuna vacuna, int dosis)
         {
             this.Persona = persona;
             this.Vacuna = vacuna;
             this.Dosis = dosis;
         }
 
-        public PersonasVacunadas() { }
+        public PersonaVacunada() { }
     }
 }

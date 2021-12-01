@@ -24,8 +24,8 @@ namespace CentroDeVacunacion.ConsolaUI
                 Console.WriteLine("1. Registrar Persona");
                 Console.WriteLine("2. Registrar Aplicacion de Vacuna");
                 Console.WriteLine("3. Ver registro de Personas Ingresadas");
-                Console.WriteLine("4. Ver Vacunas ingresadas");
-                Console.WriteLine("5. Ingresar Vacuna al registro");
+                Console.WriteLine("4. Ingresar Vacuna al registro");
+                Console.WriteLine("5. Ver Vacunas ingresadas");
                 Console.WriteLine("0. Salir");
 
                 int opcion = this.LeerOpcionValida(new List<int>() { 1, 2, 3, 4, 5, 0 });
@@ -49,12 +49,12 @@ namespace CentroDeVacunacion.ConsolaUI
                         }
                     case 4:
                         {
-                            this.ListarVacuna();
+                            this.IngresarVacuna();
                             break;
                         }
                     case 5:
                         {
-                            this.IngresarVacuna();
+                            this.ListarVacuna();
                             break;
                         }
                     case 0:

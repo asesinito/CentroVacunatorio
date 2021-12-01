@@ -18,7 +18,7 @@ namespace CentroDeVacunacion.ConsolaUI
             DateTime fechaDeNacimiento;      
         
             Console.Clear();
-            Console.Write("Ingrese el Nombre: ");
+            Console.Write("Ingrese el Nombre: \n");
             nombre = Console.ReadLine();
             Console.WriteLine("Ingrese el Apellido");
             apellido = Console.ReadLine();
