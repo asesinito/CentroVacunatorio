@@ -1,5 +1,6 @@
 ﻿using CentroDeVacunacion.ConsolaUI;
 using System;
+using System.IO;
 
 namespace CentroDeVacunacion
 {
@@ -9,6 +10,8 @@ namespace CentroDeVacunacion
         {
             MenuUI nuevoMenu = new MenuUI();
             nuevoMenu.MenuPrincipal();
+
+
         }
     }
 }
