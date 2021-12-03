@@ -9,40 +9,44 @@ using CentroDeVacunacion.Entidades;
 
 namespace CentroDeVacunacion
 {
-    class ManejoDeArchivos 
+    class ManejoDeArchivos<T>
     {
-        public void GuardarPeronas(List<Persona> personas)
-        {
-            string path = "persona.json";
+        private string path;
+        private List<T> datos = new List<T>();
+        private bool necesitaRecargar = true;
 
+        public ManejoDeArchivos(string path)
+        {
+            this.path = path;
+        }
+
+        public void Guardar(List<T> datos)
+        {
             try
             {
-                File.WriteAllText(path, JsonSerializer.Serialize(personas));
+                File.WriteAllText(path, JsonSerializer.Serialize(datos));
+                necesitaRecargar = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Ha ocurrido un error {ex.Message}");
             }
         }
 
-        public void AbrirPersonas()
+        public List<T> Leer()
         {
-            string path = "persona.json";
-
-            try
-            {
-                List<Persona> personas = JsonSerializer.Deserialize<List<Persona>>(File.ReadAllText(path));
+            if (necesitaRecargar) { 
+                try
+                {
+                    datos = JsonSerializer.Deserialize<List<T>>(File.ReadAllText(path));
+                    necesitaRecargar = false;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ha ocurrido un error {ex.Message}");
+                }
             }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"Ha ocurrido un error {ex.Message}");
-            }
-            
+            return datos;
         }
     }
-
-    
-
-    
-    
 }

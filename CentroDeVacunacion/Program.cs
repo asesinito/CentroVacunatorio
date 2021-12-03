@@ -10,8 +10,6 @@ namespace CentroDeVacunacion
         {
             MenuUI nuevoMenu = new MenuUI();
             nuevoMenu.MenuPrincipal();
-
-
         }
     }
 }

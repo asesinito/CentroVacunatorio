@@ -76,7 +76,7 @@ namespace CentroDeVacunacion.ConsolaUI
 
         private void ListarPersonas()
         {
-            this.personaIO.ListarPersonas(this.centroVacunatorio.ObtenerPersonas());
+            this.personaIO.ListarPersonas(this.centroVacunatorio.Personas);
         }
 
         private void IngresarVacuna()
@@ -87,7 +87,7 @@ namespace CentroDeVacunacion.ConsolaUI
 
         private void ListarVacuna()
         {
-            this.vacunaIO.ListarVacunas(this.centroVacunatorio.ObtenerVacuna());
+            this.vacunaIO.ListarVacunas(this.centroVacunatorio.Vacunas);
         }
 
         private int LeerOpcionValida(List<int> opcionesValidas)

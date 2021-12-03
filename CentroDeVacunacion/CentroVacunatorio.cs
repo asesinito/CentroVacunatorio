@@ -11,29 +11,35 @@ namespace CentroDeVacunacion
 {
     class CentroVacunatorio
     {
-        private ManejoDeArchivos manejoDeArchivos = new ManejoDeArchivos();
-        private List<Persona> Personas = new List<Persona>();
-        private List<Vacuna> Vacunas = new List<Vacuna>();
+        public List<Persona> Personas
+        {
+            get
+            {
+                return manejoDeArchivosDePersonas.Leer();
+            }
+        }
+        public List<Vacuna> Vacunas
+        {
+            get
+            {
+                return manejoDeArchivosDeVacunas.Leer();
+            }
+        }
+
+        private ManejoDeArchivos<Persona> manejoDeArchivosDePersonas = new ManejoDeArchivos<Persona>("personas.json");
+        private ManejoDeArchivos<Vacuna> manejoDeArchivosDeVacunas = new ManejoDeArchivos<Vacuna>("vacunas.json");
+
 
         public void RegistrarPersona(Persona persona)
         {
             this.Personas.Add(persona);
-            manejoDeArchivos.GuardarPeronas(Personas);
+            manejoDeArchivosDePersonas.Guardar(Personas);
         }
 
-        public List<Persona> ObtenerPersonas()
-        {
-            return this.Personas;
-        }
-        
         public void RegistrarVacuna(Vacuna vacuna)
         {
             this.Vacunas.Add(vacuna);
-        }
-
-        public List<Vacuna> ObtenerVacuna()
-        {
-            return this.Vacunas;
+            manejoDeArchivosDeVacunas.Guardar(Vacunas);
         }
     }
 }

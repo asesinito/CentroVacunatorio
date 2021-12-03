@@ -32,7 +32,7 @@ namespace CentroDeVacunacion.ConsolaUI
 
             foreach(Vacuna vacuna in vacunas)
             {
-                Console.WriteLine($"Nombre: {vacuna.Nombre}, Pais de Origen: {vacuna.PaisDeOrigen}, Fecha de Vencimiento: {vacuna.FechaDeVencimiento:dd/MM/yyyy}");
+                Console.WriteLine($"Nombre: {vacuna.Nombre} - Pais de Origen: {vacuna.PaisDeOrigen} - Fecha de Vencimiento: {vacuna.FechaDeVencimiento:dd/MM/yyyy}");
             }
             Console.ReadKey();
         }
