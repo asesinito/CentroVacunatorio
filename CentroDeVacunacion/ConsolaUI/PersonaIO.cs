@@ -25,8 +25,7 @@ namespace CentroDeVacunacion.ConsolaUI
             Console.WriteLine("Ingrese el Tipo de DNI");
             Console.WriteLine("Libreta Civica, Libreta Verde, Libreta Celeste o DNI Tarjeta.");
             claseDni = Console.ReadLine();
-            Console.WriteLine("Ingrese el Numero de DNI");
-            dni = int.Parse(Console.ReadLine());
+            dni = IngresarDNI();
             Console.WriteLine("Ingrese Pais de Origen");
             nacionalidad = Console.ReadLine();
             Console.WriteLine("Ingrese la fecha de Nacimiento en el Formato dd/MM/yyyy");
@@ -36,6 +35,27 @@ namespace CentroDeVacunacion.ConsolaUI
 
 
             return new Persona(nombre, apellido, claseDni, dni, nacionalidad, fechaDeNacimiento, direccion, informacion);
+        }
+
+        public int IngresarDNI()
+        {
+            int dni = 0;
+            bool aux = false;
+
+            while (!aux)
+            {
+                try
+                {
+                    Console.WriteLine("Ingrese el Numero de DNI");
+                    dni = int.Parse(Console.ReadLine());
+                    aux = true;
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("Debe ingresar un numero de documento valido");
+                }
+            }
+            return dni;
         }
 
         public void ListarPersonas(List<Persona> personas)
