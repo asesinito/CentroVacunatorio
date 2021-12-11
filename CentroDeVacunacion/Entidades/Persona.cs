@@ -16,9 +16,9 @@ namespace CentroDeVacunacion.Entidades
         public DateTime FechaDeNacimiento { get; private set; }
         public Direccion Direccion { get; private set; }
         public Informacion Informacion { get; private set; }
-        public List<Vacunacion> Vacunacion { get; private set; }
+        public List<Vacunacion> Vacunaciones { get; private set; }
 
-        public Persona (string nombre, string apellido, string claseDni, int dni, string nacionalidad, DateTime fechaDeNacimiento, Direccion direccion, Informacion informacion,List<Vacunacion> vacunacion)
+        public Persona (string nombre, string apellido, string claseDni, int dni, string nacionalidad, DateTime fechaDeNacimiento, Direccion direccion, Informacion informacion,List<Vacunacion> vacunaciones)
         {
             this.Nombre = nombre;
             this.Apellido = apellido;
@@ -28,7 +28,7 @@ namespace CentroDeVacunacion.Entidades
             this.FechaDeNacimiento = fechaDeNacimiento;
             this.Direccion = direccion;
             this.Informacion = informacion;
-            this.Vacunacion = vacunacion;
+            this.Vacunaciones = vacunaciones;
         }
     }
 }

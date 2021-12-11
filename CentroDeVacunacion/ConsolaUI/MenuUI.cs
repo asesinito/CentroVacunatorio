@@ -92,12 +92,24 @@ namespace CentroDeVacunacion.ConsolaUI
 
         private int LeerOpcionValida(List<int> opcionesValidas)
         {
-            int seleccionada = -1;
-            while (!opcionesValidas.Contains(seleccionada))
-            {
-                seleccionada = int.Parse(Console.ReadKey(true).KeyChar.ToString());
+            bool aux = false;
+            while (!aux) { 
+                try 
+                { 
+                    int seleccionada = -1;
+                    while (!opcionesValidas.Contains(seleccionada))
+                    {
+                        seleccionada = int.Parse(Console.ReadKey(true).KeyChar.ToString());
+                    }
+                    aux = true;
+                    return seleccionada;
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("Por favor seleccione una opcion valida");
+                }
             }
-            return seleccionada;
+            return -1;
         }
     }
 }

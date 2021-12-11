@@ -90,6 +90,19 @@ namespace CentroDeVacunacion.ConsolaUI
             foreach(Persona persona in personas)
             {
                 Console.WriteLine($"{persona.Apellido} - {persona.Nombre} - {persona.ClaseDni} - {persona.Dni} - {persona.FechaDeNacimiento:dd/MM/yy}");
+                
+                if(persona.Vacunaciones.Count > 0)
+                {
+                    foreach (Vacunacion vacunacion in persona.Vacunaciones)
+                    {
+                        Console.WriteLine($"{vacunacion.Vacuna.Nombre} - Dosis -{vacunacion.Dosis} - {vacunacion.FechaYHoraDeVacunacion}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No se encuentra registro de vacunacion");
+                }
+                Console.WriteLine("---------------------------------------------------");
             }
             Console.ReadKey();
         }

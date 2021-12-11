@@ -65,7 +65,6 @@ namespace CentroDeVacunacion.ConsolaUI
                         // O volver a registrarla
                         Console.WriteLine("Ya existe un registro de la dosis que desea aplicar");
                         Console.WriteLine("Vuelva a ingresar los datos");
-                        Console.ReadKey();
                     }
 
                     aux = noHayRegistroConMismaDosis;
