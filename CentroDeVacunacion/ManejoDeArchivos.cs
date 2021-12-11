@@ -30,11 +30,17 @@ namespace CentroDeVacunacion
             catch (Exception ex)
             {
                 Console.WriteLine($"Ha ocurrido un error {ex.Message}");
+                Console.ReadKey();
             }
         }
 
         public List<T> Leer()
         {
+            if (!File.Exists(path))
+            {
+                return datos;
+            }
+
             if (necesitaRecargar) { 
                 try
                 {
@@ -44,6 +50,7 @@ namespace CentroDeVacunacion
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Ha ocurrido un error {ex.Message}");
+                    Console.ReadKey();
                 }
             }
             return datos;

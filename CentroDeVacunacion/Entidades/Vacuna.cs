@@ -6,19 +6,17 @@ using System.Threading.Tasks;
 
 namespace CentroDeVacunacion.Entidades
 {
-    class Vacuna
+    public class Vacuna
     {
         public string Nombre { get; private set; }
 
         public string PaisDeOrigen { get; private set; }
 
-        public DateTime FechaDeVencimiento { get; private set; }
-
-        public Vacuna(string nombre, string paisDeOrigen, DateTime fechaDeVencimiento)
+        public Vacuna(string nombre, string paisDeOrigen)
         {
             this.Nombre = nombre;
             this.PaisDeOrigen = paisDeOrigen;
-            this.FechaDeVencimiento = fechaDeVencimiento;
         }
     }
 }
+   

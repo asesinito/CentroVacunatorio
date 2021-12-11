@@ -34,12 +34,12 @@ namespace CentroDeVacunacion.ConsolaUI
                 {
                     case 1:
                         {
-                            this.IngresarPersona();
+                            this.IngresarPersona(centroVacunatorio.Vacunas);
                             break;
                         }
                     case 2:
                         {
-                            this.IngresarPersona();
+                            this.IngresarPersona(centroVacunatorio.Vacunas);
                             break;
                         }
                     case 3:
@@ -68,9 +68,9 @@ namespace CentroDeVacunacion.ConsolaUI
             }
         }
 
-        private void IngresarPersona()
+        private void IngresarPersona(List<Vacuna> vacunasRegistradas)
         {
-            Persona nuevaPersona = this.personaIO.IngresarPersona();
+            Persona nuevaPersona = this.personaIO.IngresarPersona(vacunasRegistradas);
             this.centroVacunatorio.RegistrarPersona(nuevaPersona);
         }
 

@@ -12,7 +12,9 @@ namespace CentroDeVacunacion.ConsolaUI
     {
         private DireccionIO direccionIO = new DireccionIO();
         private InformacionIO informacionIO = new InformacionIO();
-        public Persona IngresarPersona()
+        private VacunacionIO vacunacionIO = new VacunacionIO();
+
+        public Persona IngresarPersona(List<Vacuna> vacunasRegistradas)
         {
             string nombre, apellido, claseDni, nacionalidad;
             int dni;
@@ -32,11 +34,10 @@ namespace CentroDeVacunacion.ConsolaUI
             fechaDeNacimiento = IngresoFechaNacimiento();
             Direccion direccion = this.direccionIO.IngresarDireccion();
             Informacion informacion = this.informacionIO.IngresarInformacion();
+            List<Vacunacion> vacunacionesRegistradas = vacunacionIO.RegistroDeVacunaciones(vacunasRegistradas);
 
-
-            return new Persona(nombre, apellido, claseDni, dni, nacionalidad, fechaDeNacimiento, direccion, informacion);
+            return new Persona(nombre, apellido, claseDni, dni, nacionalidad, fechaDeNacimiento, direccion, informacion, vacunacionesRegistradas);
         }
-
         public DateTime IngresoFechaNacimiento()
         {
             CultureInfo cultura = CultureInfo.CreateSpecificCulture("es-AR");

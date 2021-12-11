@@ -10,16 +10,15 @@ namespace CentroDeVacunacion.Entidades
     {
         public string Nombre { get; private set; }
         public string Apellido { get; private set; }
-
         public string ClaseDni { get; private set; }
-
         public int Dni { get; private set; }
         public string Nacionalidad { get; private set; }
         public DateTime FechaDeNacimiento { get; private set; }
         public Direccion Direccion { get; private set; }
         public Informacion Informacion { get; private set; }
+        public List<Vacunacion> Vacunacion { get; private set; }
 
-        public Persona (string nombre, string apellido, string claseDni, int dni, string nacionalidad, DateTime fechaDeNacimiento, Direccion direccion, Informacion informacion)
+        public Persona (string nombre, string apellido, string claseDni, int dni, string nacionalidad, DateTime fechaDeNacimiento, Direccion direccion, Informacion informacion,List<Vacunacion> vacunacion)
         {
             this.Nombre = nombre;
             this.Apellido = apellido;
@@ -29,6 +28,7 @@ namespace CentroDeVacunacion.Entidades
             this.FechaDeNacimiento = fechaDeNacimiento;
             this.Direccion = direccion;
             this.Informacion = informacion;
+            this.Vacunacion = vacunacion;
         }
     }
 }
