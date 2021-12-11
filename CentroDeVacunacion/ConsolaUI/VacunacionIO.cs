@@ -101,21 +101,21 @@ namespace CentroDeVacunacion.ConsolaUI
                                 aux2 = true;
                                 aux = true;
                             }
+                            else if(respuesta != "Si" && respuesta != "si")
+                            {
+                                Console.WriteLine("Debe ingresar Si o No");
+                            }
                         }
 
                     }
                     else
                     {
-                        // setear como vacuna defualt que no esta vacunado
-                        // boletear el estado por defecto de la vacuna y chequear por el count de las vacunaicones para etemrinar que no esta vacunado
-                        //Vacunacion vacunacionPorDefecto = Vacunacion.EstadoDeVacunacionPorDefecto();
-                        //vacunaciones.Add(vacunacionPorDefecto);
                         return vacunaciones;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Debe ingresar un numero de documento valido");
+                    Console.WriteLine(ex.Message);
                 }
             }
             return vacunaciones;
@@ -166,7 +166,7 @@ namespace CentroDeVacunacion.ConsolaUI
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Debe ingresar un numero");
+                    Console.WriteLine("Debe ingresar un numero de la lista");
                 }
             }
             return respuesta;
@@ -189,8 +189,14 @@ namespace CentroDeVacunacion.ConsolaUI
                     }
                     else if (read == "No" || read == "no")
                     {
+                        Console.WriteLine("Por favor ingrese los datos de la vacuna a suministrar");
+                        Console.ReadKey();
                         respuesta = false;
                         aux = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Debe ingresar Si o No");
                     }
                 }
                 catch (Exception ex)
@@ -220,6 +226,10 @@ namespace CentroDeVacunacion.ConsolaUI
                     {
                         respuesta = false;
                         aux = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Debe ingresar Si o No");
                     }
                 }
                 catch (Exception ex)
