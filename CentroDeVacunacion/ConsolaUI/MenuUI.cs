@@ -70,7 +70,7 @@ namespace CentroDeVacunacion.ConsolaUI
 
         private void IngresarPersona(List<Vacuna> vacunasRegistradas)
         {
-            Persona nuevaPersona = this.personaIO.IngresarPersona(vacunasRegistradas);
+            Persona nuevaPersona = this.personaIO.IngresarPersona(centroVacunatorio);
             this.centroVacunatorio.RegistrarPersona(nuevaPersona);
         }
 

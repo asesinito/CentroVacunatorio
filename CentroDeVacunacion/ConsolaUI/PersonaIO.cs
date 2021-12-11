@@ -14,7 +14,7 @@ namespace CentroDeVacunacion.ConsolaUI
         private InformacionIO informacionIO = new InformacionIO();
         private VacunacionIO vacunacionIO = new VacunacionIO();
 
-        public Persona IngresarPersona(List<Vacuna> vacunasRegistradas)
+        public Persona IngresarPersona(CentroVacunatorio centroVacunatorio)
         {
             string nombre, apellido, claseDni, nacionalidad;
             int dni;
@@ -34,7 +34,7 @@ namespace CentroDeVacunacion.ConsolaUI
             fechaDeNacimiento = IngresoFechaNacimiento();
             Direccion direccion = this.direccionIO.IngresarDireccion();
             Informacion informacion = this.informacionIO.IngresarInformacion();
-            List<Vacunacion> vacunacionesRegistradas = vacunacionIO.RegistroDeVacunaciones(vacunasRegistradas);
+            List<Vacunacion> vacunacionesRegistradas = vacunacionIO.RegistrarVacunacionesHastaParar(centroVacunatorio.Vacunas, centroVacunatorio);
 
             return new Persona(nombre, apellido, claseDni, dni, nacionalidad, fechaDeNacimiento, direccion, informacion, vacunacionesRegistradas);
         }

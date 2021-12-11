@@ -10,11 +10,9 @@ namespace CentroDeVacunacion.ConsolaUI
     class VacunacionIO
     {
         private VacunasIO vacunaIO = new VacunasIO();
-        public Vacunacion RegistrarVacunacion(List<Vacuna> vacunasRegistradas)
+        private Vacunacion RegistrarVacunacion(List<Vacuna> vacunasRegistradas, CentroVacunatorio centroVacunatorio)
         {
-            bool deseaVacunar = PreguntarSiDeseaVacunar();
-            if (deseaVacunar)
-            {
+            
                 // Preguntar si desea usar una vacuna ya registrada o si desea registrar una nueva vaucna
                 bool deseaUsarUnaVacunaRegistrada = PreugntarSiDeseaUsarUnaVacunaRegistrada();
                 if (deseaUsarUnaVacunaRegistrada)
@@ -36,37 +34,27 @@ namespace CentroDeVacunacion.ConsolaUI
                 {
                     // register a new vacuna
                     Vacuna vacunaRegistrada = vacunaIO.IngresarVacuna();
+                    centroVacunatorio.RegistrarVacuna(vacunaRegistrada);
                     int dosisAAplicar = RegistroDosis();
                     return new Vacunacion(vacunaRegistrada, dosisAAplicar, DateTime.Now);
                 }
-            }
-            else
-            {
-                // setear como vacuna defualt que no esta vacunado
-                Vacunacion vacunacionPorDefecto = Vacunacion.EstadoDeVacunacionPorDefecto();
-                return vacunacionPorDefecto;
-            }
         }
-        public List<Vacunacion> RegistroDeVacunaciones(List<Vacuna> vacunasRegistradas)
+
+        private Vacunacion RegistroDeVacunaciones(List<Vacuna> vacunasRegistradas, List<Vacunacion> vacunaciones, CentroVacunatorio centroVacunatorio)
         {
-            List<Vacunacion> vacunaciones = new List<Vacunacion>();
+            Vacunacion vacunacion = null;
             bool aux = false;
 
             while (!aux)
             {
                 try
                 {
-                    Vacunacion vacunacion = RegistrarVacunacion(vacunasRegistradas);
-
-                    // TODO: FIX THIS
-                    if (vacunacion.Vacuna.Nombre == string.Empty)
-                    {
-                        // La vacuna es por la defualt por ende cancelar el resto de vacunaciones
-                        return vacunaciones;
-                    }
+                    vacunacion = RegistrarVacunacion(vacunasRegistradas, centroVacunatorio);
 
                     bool noHayRegistroConMismaDosis = !vacunaciones.Any(x => x.Dosis == vacunacion.Dosis);
 
+                    // TODO: Handlear que el registro sea por orden por ende chequear que en la lista de vacunaciones 
+                    // Ya exista la vacunacion con dosis anterior
                     if (noHayRegistroConMismaDosis)
                     {
                         vacunaciones.Add(vacunacion);
@@ -87,9 +75,53 @@ namespace CentroDeVacunacion.ConsolaUI
                     Console.WriteLine("Debe ingresar un numero de documento valido");
                 }
             }
-            return vacunaciones;
+            return vacunacion;
 
         }
+        public List<Vacunacion> RegistrarVacunacionesHastaParar(List<Vacuna> vacunasRegistradas, CentroVacunatorio centroVacunatorio)
+        {
+            List<Vacunacion> vacunaciones = new List<Vacunacion>();
+            bool aux = false;
+
+            while (!aux)
+            {
+                try
+                {
+                    bool deseaVacunar = PreguntarSiDeseaVacunar();
+                    if (deseaVacunar)
+                    {
+                        // LOOP THIS UNTIL THE USER WANTS TO STOP
+                        bool aux2 = false;
+                        while (!aux2) 
+                        { 
+                            Vacunacion vacunacion = RegistroDeVacunaciones(vacunasRegistradas, vacunaciones, centroVacunatorio);
+                            Console.WriteLine("Desea registrar otra vacunacion [Si/No]");
+                            string respuesta = Console.ReadLine();
+                            if (respuesta == "No" || respuesta == "no")
+                            {
+                                aux2 = true;
+                                aux = true;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        // setear como vacuna defualt que no esta vacunado
+                        // boletear el estado por defecto de la vacuna y chequear por el count de las vacunaicones para etemrinar que no esta vacunado
+                        //Vacunacion vacunacionPorDefecto = Vacunacion.EstadoDeVacunacionPorDefecto();
+                        //vacunaciones.Add(vacunacionPorDefecto);
+                        return vacunaciones;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Debe ingresar un numero de documento valido");
+                }
+            }
+            return vacunaciones;
+        }
+
         public int RegistroDosis()
         {
             int dosis = 0;
