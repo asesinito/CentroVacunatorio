@@ -21,10 +21,8 @@ namespace CentroDeVacunacion.ConsolaUI
             DateTime fechaDeNacimiento;      
         
             Console.Clear();
-            Console.Write("Ingrese el Nombre: \n");
-            nombre = Console.ReadLine();
-            Console.WriteLine("Ingrese el Apellido");
-            apellido = Console.ReadLine();
+            nombre = IngresarNombre();
+            apellido = IngresarApellido();
             Console.WriteLine("Ingrese el Tipo de DNI");
             Console.WriteLine("Libreta Civica, Libreta Verde, Libreta Celeste o DNI Tarjeta.");
             claseDni = Console.ReadLine();
@@ -38,6 +36,62 @@ namespace CentroDeVacunacion.ConsolaUI
 
             return new Persona(nombre, apellido, claseDni, dni, nacionalidad, fechaDeNacimiento, direccion, informacion, vacunacionesRegistradas);
         }
+        public string IngresarNombre()
+        {
+            string nombre = "";
+            bool aux = false;
+
+            while (!aux)
+            {
+                try
+                {
+                    Console.Write("Ingrese el Nombre: \n");
+                    nombre = Console.ReadLine();
+                    if(nombre.Length > 0)
+                    {
+                        nombre.ToUpper();
+                        aux = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Debe ingresar un nombre valido");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Debe ingresar un nombre valido");
+                }
+            }
+            return nombre;
+        }
+        public string IngresarApellido()
+        {
+            string Apellido = "";
+            bool aux = false;
+
+            while (!aux)
+            {
+                try
+                {
+                    Console.Write("Ingrese el Apellido: \n");
+                    Apellido = Console.ReadLine();
+                    if (Apellido.Length > 0)
+                    {
+                        Apellido.ToUpper();
+                        aux = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Debe ingresar un Apellido valido");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Debe ingresar un Apellido valido");
+                }
+            }
+            return Apellido;
+        }
         public DateTime IngresoFechaNacimiento()
         {
             CultureInfo cultura = CultureInfo.CreateSpecificCulture("es-AR");
@@ -50,8 +104,15 @@ namespace CentroDeVacunacion.ConsolaUI
                 {
                     Console.WriteLine("Ingrese la fecha de Nacimiento en el Formato dd/MM/yyyy");
                     DateTime newFechaDeNacimiento = DateTime.ParseExact(Console.ReadLine(),"dd/MM/yyyy", cultura);
-                    fechaDeNacimiento = newFechaDeNacimiento;
-                    aux = true;
+                    if(newFechaDeNacimiento > fechaDeNacimiento) 
+                    { 
+                        fechaDeNacimiento = newFechaDeNacimiento;
+                        aux = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("La fecha de nacimiento no puede ser posterior a la fecha actual");
+                    }
                 }
                 catch(Exception ex)
                 {
@@ -89,7 +150,7 @@ namespace CentroDeVacunacion.ConsolaUI
             
             foreach(Persona persona in personas)
             {
-                Console.WriteLine($"{persona.Apellido} - {persona.Nombre} - {persona.ClaseDni} - {persona.Dni} - {persona.FechaDeNacimiento:dd/MM/yy}");
+                Console.WriteLine($"{persona.Apellido} - {persona.Nombre} - {persona.ClaseDni}: {persona.Dni} - Fecha de Nacimiento {persona.FechaDeNacimiento:dd/MM/yyyy}");
                 
                 if(persona.Vacunaciones.Count > 0)
                 {

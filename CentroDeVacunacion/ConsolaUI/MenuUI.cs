@@ -12,6 +12,7 @@ namespace CentroDeVacunacion.ConsolaUI
         private CentroVacunatorio centroVacunatorio = new CentroVacunatorio();
         private PersonaIO personaIO = new PersonaIO();
         private VacunasIO vacunaIO = new VacunasIO();
+        private VacunacionIO vacunacionIO = new VacunacionIO();
 
         public void MenuPrincipal()
         {
@@ -20,15 +21,16 @@ namespace CentroDeVacunacion.ConsolaUI
             {
                 Console.Clear();
 
-                Console.WriteLine("Centro de Vacunacion COIVD-19");
+                Console.WriteLine("Bienvenido al Centro de Vacunacion COIVD-19\n");
                 Console.WriteLine("1. Registrar Persona");
-                Console.WriteLine("2. Registrar Aplicacion de Vacuna");
-                Console.WriteLine("3. Ver registro de Personas Ingresadas");
-                Console.WriteLine("4. Ingresar Vacuna al registro");
-                Console.WriteLine("5. Ver Vacunas ingresadas");
+                Console.WriteLine("2. Registrar Aplicacion de Dosis");
+                Console.WriteLine("3. Ver registro de Personas");
+                Console.WriteLine("4. Ingresar nueva vacuna al registro");
+                Console.WriteLine("5. Ver vacunas registradas");
+                Console.WriteLine("6. Ver dosis aplicadas\n");
                 Console.WriteLine("0. Salir");
 
-                int opcion = this.LeerOpcionValida(new List<int>() { 1, 2, 3, 4, 5, 0 });
+                int opcion = this.LeerOpcionValida(new List<int>() { 1, 2, 3, 4, 5, 6, 0 });
 
                 switch (opcion)
                 {
@@ -57,9 +59,14 @@ namespace CentroDeVacunacion.ConsolaUI
                             this.ListarVacuna();
                             break;
                         }
+                    case 6:
+                        {
+                            this.DosisSegunTipoDeVacuna();
+                            break;
+                        }
                     case 0:
                         {
-                            Console.WriteLine("Adios!");
+                            Console.WriteLine("\nMuchas gracias por utilizar nuestro sistema.");
                             salir = true;
                             break;
                         }
@@ -88,6 +95,19 @@ namespace CentroDeVacunacion.ConsolaUI
         private void ListarVacuna()
         {
             this.vacunaIO.ListarVacunas(this.centroVacunatorio.Vacunas);
+        }
+       
+        private void DosisSegunTipoDeVacuna()
+        {
+            List<Vacunacion> vacunacionesTotales = centroVacunatorio.Personas.SelectMany(x => x.Vacunaciones).ToList();
+            Dictionary<Vacuna,int> vacunasPorTipo = vacunacionIO.VacunasPorTipo(centroVacunatorio.Vacunas,vacunacionesTotales);
+
+            Console.Clear();
+            foreach(KeyValuePair<Vacuna, int> vacuna in vacunasPorTipo)
+            {
+                Console.WriteLine($"{vacuna.Key.Nombre} - Dosis Aplicadas: {vacuna.Value}");
+            }
+            Console.ReadKey();
         }
 
         private int LeerOpcionValida(List<int> opcionesValidas)

@@ -12,32 +12,32 @@ namespace CentroDeVacunacion.ConsolaUI
         private VacunasIO vacunaIO = new VacunasIO();
         private Vacunacion RegistrarVacunacion(List<Vacuna> vacunasRegistradas, CentroVacunatorio centroVacunatorio)
         {
-            
-                // Preguntar si desea usar una vacuna ya registrada o si desea registrar una nueva vaucna
-                bool deseaUsarUnaVacunaRegistrada = PreugntarSiDeseaUsarUnaVacunaRegistrada();
-                if (deseaUsarUnaVacunaRegistrada)
-                {
-                    // Check for the vaucunas list
 
-                    for (int i = 0; i < vacunasRegistradas.Count; i++)
-                    {
-                        Vacuna vacuna = vacunasRegistradas[i];
-                        Console.WriteLine(i + ". " + vacuna.Nombre);
-                    }
-                    // Ingresar un indice para registrar una nueva vacuna
-                    Vacuna vacunaSeleccionada = SeleccionarVacuna(vacunasRegistradas);
-                    int dosisAAplicar = RegistroDosis();
-                    return new Vacunacion(vacunaSeleccionada, dosisAAplicar, DateTime.Now);
+            // Preguntar si desea usar una vacuna ya registrada o si desea registrar una nueva vaucna
+            bool deseaUsarUnaVacunaRegistrada = PreugntarSiDeseaUsarUnaVacunaRegistrada();
+            if (deseaUsarUnaVacunaRegistrada)
+            {
+                // Check for the vaucunas list
 
-                }
-                else
+                for (int i = 0; i < vacunasRegistradas.Count; i++)
                 {
-                    // register a new vacuna
-                    Vacuna vacunaRegistrada = vacunaIO.IngresarVacuna();
-                    centroVacunatorio.RegistrarVacuna(vacunaRegistrada);
-                    int dosisAAplicar = RegistroDosis();
-                    return new Vacunacion(vacunaRegistrada, dosisAAplicar, DateTime.Now);
+                    Vacuna vacuna = vacunasRegistradas[i];
+                    Console.WriteLine(i + ". " + vacuna.Nombre);
                 }
+                // Ingresar un indice para registrar una nueva vacuna
+                Vacuna vacunaSeleccionada = SeleccionarVacuna(vacunasRegistradas);
+                int dosisAAplicar = RegistroDosis();
+                return new Vacunacion(vacunaSeleccionada, dosisAAplicar, DateTime.Now);
+
+            }
+            else
+            {
+                // register a new vacuna
+                Vacuna vacunaRegistrada = vacunaIO.IngresarVacuna();
+                centroVacunatorio.RegistrarVacuna(vacunaRegistrada);
+                int dosisAAplicar = RegistroDosis();
+                return new Vacunacion(vacunaRegistrada, dosisAAplicar, DateTime.Now);
+            }
         }
 
         private Vacunacion RegistroDeVacunaciones(List<Vacuna> vacunasRegistradas, List<Vacunacion> vacunaciones, CentroVacunatorio centroVacunatorio)
@@ -91,8 +91,8 @@ namespace CentroDeVacunacion.ConsolaUI
                     {
                         // LOOP THIS UNTIL THE USER WANTS TO STOP
                         bool aux2 = false;
-                        while (!aux2) 
-                        { 
+                        while (!aux2)
+                        {
                             Vacunacion vacunacion = RegistroDeVacunaciones(vacunasRegistradas, vacunaciones, centroVacunatorio);
                             Console.WriteLine("Desea registrar otra vacunacion [Si/No]");
                             string respuesta = Console.ReadLine();
@@ -101,7 +101,7 @@ namespace CentroDeVacunacion.ConsolaUI
                                 aux2 = true;
                                 aux = true;
                             }
-                            else if(respuesta != "Si" && respuesta != "si")
+                            else if (respuesta != "Si" && respuesta != "si")
                             {
                                 Console.WriteLine("Debe ingresar Si o No");
                             }
@@ -134,7 +134,7 @@ namespace CentroDeVacunacion.ConsolaUI
                     Console.WriteLine("Ingrese a que dosis corresponde. EJ> 1, 2, 3");
                     dosis = int.Parse(Console.ReadLine());
                     aux = dosis > 0;
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -180,14 +180,17 @@ namespace CentroDeVacunacion.ConsolaUI
             {
                 try
                 {
-                    Console.WriteLine("Desea usar una vacuna registrada? [Si/No]");
+                    Console.Clear();
+                    Console.WriteLine("Utilizar Vacuna ya registrada o Registrar una nueva Vacuna\n");
+                    Console.WriteLine("Ingrese [R] para seleccionar una Vacuna Registrada");
+                    Console.WriteLine("Ingrese [N] para registrar una nueva Vacuna ");
                     string read = Console.ReadLine();
-                    if (read == "Si" || read == "si")
+                    if (read == "R" || read == "r")
                     {
                         respuesta = true;
                         aux = true;
                     }
-                    else if (read == "No" || read == "no")
+                    else if (read == "N" || read == "n")
                     {
                         Console.WriteLine("Por favor ingrese los datos de la vacuna a suministrar");
                         Console.ReadKey();
@@ -240,5 +243,25 @@ namespace CentroDeVacunacion.ConsolaUI
             return respuesta;
         }
 
+        public Dictionary<Vacuna,int> VacunasPorTipo(List<Vacuna> vacunas, List<Vacunacion> vacunaciones)
+        {
+            Dictionary<Vacuna, int> diccionarioDeVacunaciones = new Dictionary<Vacuna, int>();
+
+            foreach(Vacuna vacuna in vacunas)
+            {
+                int contadorDeDosis = 0;
+
+                foreach (Vacunacion vacunacion in vacunaciones)
+                {
+                    if (vacuna.Nombre == vacunacion.Vacuna.Nombre) 
+                    {
+                        contadorDeDosis++; 
+                    }
+                }
+                diccionarioDeVacunaciones[vacuna] = contadorDeDosis;
+            }
+
+            return diccionarioDeVacunaciones;
+        }
     }
 }
