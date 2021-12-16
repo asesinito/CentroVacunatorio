@@ -27,10 +27,11 @@ namespace CentroDeVacunacion.ConsolaUI
                 Console.WriteLine("3. Ver registro de Personas");
                 Console.WriteLine("4. Ingresar nueva vacuna al registro");
                 Console.WriteLine("5. Ver vacunas registradas");
-                Console.WriteLine("6. Ver dosis aplicadas\n");
+                Console.WriteLine("6. Ver dosis aplicadas");
+                Console.WriteLine("7. Buscar persona por DNI\n");
                 Console.WriteLine("0. Salir");
 
-                int opcion = this.LeerOpcionValida(new List<int>() { 1, 2, 3, 4, 5, 6, 0 });
+                int opcion = this.LeerOpcionValida(new List<int>() { 1, 2, 3, 4, 5, 6, 7, 0 });
 
                 switch (opcion)
                 {
@@ -64,6 +65,11 @@ namespace CentroDeVacunacion.ConsolaUI
                             this.DosisSegunTipoDeVacuna();
                             break;
                         }
+                    case 7:
+                        {
+                            BuscarPersonaPorDNI();
+                            break;
+                        }
                     case 0:
                         {
                             Console.WriteLine("\nMuchas gracias por utilizar nuestro sistema.");
@@ -84,6 +90,11 @@ namespace CentroDeVacunacion.ConsolaUI
         private void ListarPersonas()
         {
             this.personaIO.ListarPersonas(this.centroVacunatorio.Personas);
+        }
+
+        private void BuscarPersonaPorDNI()
+        {
+            personaIO.BuscarPersonasPorDNI(centroVacunatorio.Personas);
         }
 
         private void IngresarVacuna()

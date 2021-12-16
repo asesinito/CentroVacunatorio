@@ -32,13 +32,13 @@ namespace CentroDeVacunacion
 
         public void RegistrarPersona(Persona persona)
         {
-            this.Personas.Add(persona);
+            Personas.Add(persona);
             manejoDeArchivosDePersonas.Guardar(Personas);
         }
 
         public void RegistrarVacuna(Vacuna vacuna)
         {
-            this.Vacunas.Add(vacuna);
+            Vacunas.Add(vacuna);
             manejoDeArchivosDeVacunas.Guardar(Vacunas);
         }
     }

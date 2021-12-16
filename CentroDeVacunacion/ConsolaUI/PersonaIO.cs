@@ -14,6 +14,14 @@ namespace CentroDeVacunacion.ConsolaUI
         private InformacionIO informacionIO = new InformacionIO();
         private VacunacionIO vacunacionIO = new VacunacionIO();
 
+        private List<string> clasesDeDNI = new List<string>
+        {
+            "Libreta Civica",
+            "Libreta Verde",
+            "Libreta Celeste",
+            "DNI Tarjeta"
+        };
+
         public Persona IngresarPersona(CentroVacunatorio centroVacunatorio)
         {
             string nombre, apellido, claseDni, nacionalidad;
@@ -23,15 +31,13 @@ namespace CentroDeVacunacion.ConsolaUI
             Console.Clear();
             nombre = IngresarNombre();
             apellido = IngresarApellido();
-            Console.WriteLine("Ingrese el Tipo de DNI");
-            Console.WriteLine("Libreta Civica, Libreta Verde, Libreta Celeste o DNI Tarjeta.");
-            claseDni = Console.ReadLine();
-            dni = IngresarDNI();
+            claseDni = MostrarTiposDeDNI();
+            dni = IngresarDNI(centroVacunatorio.Personas);
             Console.WriteLine("Ingrese Pais de Origen");
             nacionalidad = Console.ReadLine();
             fechaDeNacimiento = IngresoFechaNacimiento();
-            Direccion direccion = this.direccionIO.IngresarDireccion();
-            Informacion informacion = this.informacionIO.IngresarInformacion();
+            Direccion direccion = direccionIO.IngresarDireccion();
+            Informacion informacion = informacionIO.IngresarInformacion();
             List<Vacunacion> vacunacionesRegistradas = vacunacionIO.RegistrarVacunacionesHastaParar(centroVacunatorio.Vacunas, centroVacunatorio);
 
             return new Persona(nombre, apellido, claseDni, dni, nacionalidad, fechaDeNacimiento, direccion, informacion, vacunacionesRegistradas);
@@ -54,7 +60,7 @@ namespace CentroDeVacunacion.ConsolaUI
                     }
                     else
                     {
-                        Console.WriteLine("Debe ingresar un nombre valido");
+                        Console.WriteLine("No puede ingresar este campo vacio");
                     }
                 }
                 catch (Exception ex)
@@ -82,7 +88,7 @@ namespace CentroDeVacunacion.ConsolaUI
                     }
                     else
                     {
-                        Console.WriteLine("Debe ingresar un Apellido valido");
+                        Console.WriteLine("No puede ingresar este campo vacio");
                     }
                 }
                 catch (Exception ex)
@@ -104,7 +110,8 @@ namespace CentroDeVacunacion.ConsolaUI
                 {
                     Console.WriteLine("Ingrese la fecha de Nacimiento en el Formato dd/MM/yyyy");
                     DateTime newFechaDeNacimiento = DateTime.ParseExact(Console.ReadLine(),"dd/MM/yyyy", cultura);
-                    if(newFechaDeNacimiento > fechaDeNacimiento) 
+                    int compare = DateTime.Compare(newFechaDeNacimiento, fechaDeNacimiento);
+                    if(compare < 0) 
                     { 
                         fechaDeNacimiento = newFechaDeNacimiento;
                         aux = true;
@@ -121,8 +128,34 @@ namespace CentroDeVacunacion.ConsolaUI
             }
             return fechaDeNacimiento;
         }
+        public string MostrarTiposDeDNI()
+        {
+            string tipoDeDniSeleccionado = "";
+            bool aux = false;
 
-        public int IngresarDNI()
+            while (!aux)
+            {
+                try
+                {
+                    Console.WriteLine("Seleccione el Tipo de Documento de Identificacion\n");
+
+                    for (int i = 0; i < clasesDeDNI.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {clasesDeDNI[i]}");
+                    }
+                    int indiceSelecionado = int.Parse(Console.ReadLine());
+                    tipoDeDniSeleccionado = clasesDeDNI[indiceSelecionado - 1];
+                    aux = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ha ocurrido un error {ex.Message}");
+                }
+            }
+            return tipoDeDniSeleccionado;
+        }
+
+        public int IngresarDNI(List<Persona> personas)
         {
             int dni = 0;
             bool aux = false;
@@ -133,7 +166,16 @@ namespace CentroDeVacunacion.ConsolaUI
                 {
                     Console.WriteLine("Ingrese el Numero de DNI");
                     dni = int.Parse(Console.ReadLine());
-                    aux = true;
+                    if(comprobarSiUnaPersonaYaEstaRegistrda(personas, dni))
+                    {
+                        aux = true;
+                        return dni;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ya hay una persona registrda con ese DNI");
+                    }
+                    
                 }
                 catch(Exception ex)
                 {
@@ -141,6 +183,63 @@ namespace CentroDeVacunacion.ConsolaUI
                 }
             }
             return dni;
+        }
+        public bool comprobarSiUnaPersonaYaEstaRegistrda(List<Persona> personas, int dni)
+        {
+            foreach(Persona persona in personas)
+            {
+                if(persona.Dni == dni)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void BuscarPersonasPorDNI(List<Persona> personas)
+        {
+            int dni = 0;
+            bool aux = false;
+            
+            try 
+            { 
+                Console.Clear();
+                Console.WriteLine("Ingrese el DNI a buscar");
+                Console.WriteLine("Debe ingresar los numeros sin signos de puntuacion!\n");
+                dni = int.Parse(Console.ReadLine());
+
+                foreach(Persona persona in personas)
+                {
+                    if(persona.Dni == dni)
+                    {
+                        Console.WriteLine($"\nApellido: {persona.Apellido} - Nombre: {persona.Nombre} - Fecha de Nacimiento {persona.FechaDeNacimiento:dd/MM/yyyy}");
+                        Console.WriteLine($"Pais de Origen: {persona.Nacionalidad} - Provincia: {persona.Direccion.Provincia} - Ciudad: {persona.Direccion.Ciudad} - Direccion: {persona.Direccion.Calle} {persona.Direccion.Numero}");
+                        Console.WriteLine("\nInformacion de contacto");
+                        Console.WriteLine($"Telefono: {persona.Informacion.Telefono} - Contacto de Emergencia: {persona.Informacion.TelefonoDeContacto} - Email: {persona.Informacion.Email}");
+                        Console.WriteLine("\nRegistro de vacunacion");
+                        Console.WriteLine("----------------------------------------------------------");
+
+                        if(persona.Vacunaciones.Count > 0) 
+                        { 
+                            foreach (Vacunacion vacunacion in persona.Vacunaciones)
+                            {
+                                Console.WriteLine($"\n{vacunacion.Vacuna.Nombre} - Dosis -{vacunacion.Dosis} - {vacunacion.FechaYHoraDeVacunacion}");
+                                Console.WriteLine("----------------------------------------------------------");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("No se encuentra registro de vacunacion");
+                        }
+                    }
+                }
+                Console.ReadKey();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Debe ingresar un numero de documento valido");
+                Console.ReadKey();  
+            }
         }
 
         public void ListarPersonas(List<Persona> personas)
