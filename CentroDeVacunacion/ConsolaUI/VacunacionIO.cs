@@ -13,12 +13,12 @@ namespace CentroDeVacunacion.ConsolaUI
         private Vacunacion RegistrarVacunacion(List<Vacuna> vacunasRegistradas, CentroVacunatorio centroVacunatorio)
         {
 
-            // Preguntar si desea usar una vacuna ya registrada o si desea registrar una nueva vaucna
-            bool deseaUsarUnaVacunaRegistrada = PreugntarSiDeseaUsarUnaVacunaRegistrada();
+            // Preguntar si desea usar una vacuna ya registrada o si desea registrar una nueva vacuna
+            bool deseaUsarUnaVacunaRegistrada = PreugntarSiDeseaUsarUnaVacunaRegistrada(vacunasRegistradas);
             if (deseaUsarUnaVacunaRegistrada)
             {
                 // Check for the vaucunas list
-
+                Console.Clear();
                 for (int i = 0; i < vacunasRegistradas.Count; i++)
                 {
                     Vacuna vacuna = vacunasRegistradas[i];
@@ -32,7 +32,6 @@ namespace CentroDeVacunacion.ConsolaUI
             }
             else
             {
-                // register a new vacuna
                 Vacuna vacunaRegistrada = vacunaIO.IngresarVacuna();
                 centroVacunatorio.RegistrarVacuna(vacunaRegistrada);
                 int dosisAAplicar = RegistroDosis();
@@ -65,13 +64,13 @@ namespace CentroDeVacunacion.ConsolaUI
                         // O volver a registrarla
                         Console.WriteLine("Ya existe un registro de la dosis que desea aplicar");
                         Console.WriteLine("Vuelva a ingresar los datos");
+                        Console.ReadKey();
                     }
-
                     aux = noHayRegistroConMismaDosis;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Debe ingresar un numero de documento valido");
+                    Console.WriteLine($"Ha ocurrido un error {ex.Message}");
                 }
             }
             return vacunacion;
@@ -89,7 +88,6 @@ namespace CentroDeVacunacion.ConsolaUI
                     bool deseaVacunar = PreguntarSiDeseaVacunar();
                     if (deseaVacunar)
                     {
-                        // LOOP THIS UNTIL THE USER WANTS TO STOP
                         bool aux2 = false;
                         while (!aux2)
                         {
@@ -171,7 +169,7 @@ namespace CentroDeVacunacion.ConsolaUI
             }
             return respuesta;
         }
-        public bool PreugntarSiDeseaUsarUnaVacunaRegistrada()
+        public bool PreugntarSiDeseaUsarUnaVacunaRegistrada(List<Vacuna> vacunasRegistradas)
         {
             bool respuesta = false;
             bool aux = false;
@@ -184,6 +182,13 @@ namespace CentroDeVacunacion.ConsolaUI
                     Console.WriteLine("Utilizar Vacuna ya registrada o Registrar una nueva Vacuna\n");
                     Console.WriteLine("Ingrese [R] para seleccionar una Vacuna Registrada");
                     Console.WriteLine("Ingrese [N] para registrar una nueva Vacuna ");
+                    Console.WriteLine("\nLas vacunas ya registradas son:");
+                    for (int i = 0; i < vacunasRegistradas.Count; i++)
+                    {
+                        Vacuna vacuna = vacunasRegistradas[i];
+                        Console.WriteLine(i + ". " + vacuna.Nombre);
+                    }
+
                     string read = Console.ReadLine();
                     if (read == "R" || read == "r")
                     {
@@ -241,6 +246,108 @@ namespace CentroDeVacunacion.ConsolaUI
                 }
             }
             return respuesta;
+        }
+
+        public void AgregarVacunacionesAPersonasEnRegistro(PersonaIO personaIO, List<Persona> personas, List<Vacuna> vacunasRegistradas, CentroVacunatorio centroVacunatorio)
+        {
+            bool aux = false;
+
+            while (!aux)
+            {
+                try
+                {
+                    Console.Clear();
+                    Console.WriteLine("Ingrese el DNI de la persosa a aplicar la dosis");
+                    Console.WriteLine("Debe ingresar los numeros sin signos de puntuacion!\n");
+                    int dni = int.Parse(Console.ReadLine());
+                    Persona persona = personaIO.BuscarPersonaEnRegistro(dni, personas);
+
+                    if(persona != null)
+                    {
+                        bool aux2 = false;
+                        while (!aux2)
+                        {
+                            Vacunacion vacunacion = RegistroDeVacunaciones(vacunasRegistradas, persona.Vacunaciones, centroVacunatorio);
+                            
+                            Console.WriteLine("Desea registrar otra vacunacion [Si/No]");
+                            string respuesta = Console.ReadLine();
+                            if (respuesta == "No" || respuesta == "no")
+                            {
+                                aux2 = true;
+                                aux = true;
+                            }
+                            else if (respuesta != "Si" && respuesta != "si")
+                            {
+                                Console.WriteLine("Debe ingresar Si o No");
+                            }
+                            
+                        }
+                        centroVacunatorio.EliminarRegistroDePersona(persona);
+                        centroVacunatorio.RegistrarPersona(persona);
+                    }
+                    else
+                    {
+                        Console.WriteLine("El DNI buscado no se encuentra en la base de datos.");
+                        Console.ReadKey();
+                        aux = true;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"Debe ingresar un numero de documento valido, sin signos de puntuacion. {ex.Message}");
+                    Console.ReadKey();
+                }
+            }
+        }
+        public void MostrarDosisAplicadasEntreDosFechas(List<Vacunacion> vacunaciones)
+        {
+            DateTime primeraFecha;
+            DateTime segundaFecha;
+            int cantidadDeDosisEntreFechas;
+            bool aux = false;
+
+            while (!aux)
+            {
+                try
+                {
+                    Console.Clear();
+                    Console.WriteLine("Debera ingresar las fechas entre las cuales se realizara la busqueda");
+                    Console.WriteLine("Debe ingresar las fechas en el formato dd/MM/yyyy\n");
+                    Console.WriteLine("Ingrese la Primera Fecha");
+                    primeraFecha = DateTime.Parse(Console.ReadLine());
+                    Console.WriteLine("Ingrese la Segunda Fecha");
+                    segundaFecha = DateTime.Parse(Console.ReadLine());
+
+                    cantidadDeDosisEntreFechas = DosisAplicadasPorFechas(vacunaciones, primeraFecha, segundaFecha);
+
+                    Console.WriteLine($"Entre {primeraFecha:dd/MM/yy} y {segundaFecha:dd/MM/yy} se han aplicado: {cantidadDeDosisEntreFechas} dosis.");
+                    Console.ReadKey();
+                    aux = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ha ocurrido un error: {ex.Message}");
+                    Console.ReadKey();
+                }
+            }
+            
+            
+        }
+        public int DosisAplicadasPorFechas(List<Vacunacion> vacunaciones, DateTime primeraFecha, DateTime segundaFecha)
+        {
+            int contadorDeDosis = 0;
+            DateTime fechaMenor = primeraFecha.Ticks < segundaFecha.Ticks ? primeraFecha : segundaFecha;
+            DateTime fechaMayor = primeraFecha.Ticks > segundaFecha.Ticks ? primeraFecha : segundaFecha;
+            DateTime diaTerminadoFechaMayor = fechaMayor.AddDays(1);
+
+            foreach(Vacunacion vacunacion in vacunaciones)
+            {
+                if(vacunacion.FechaYHoraDeVacunacion.Ticks > fechaMenor.Ticks && vacunacion.FechaYHoraDeVacunacion.Ticks < diaTerminadoFechaMayor.Ticks)
+                {
+                    contadorDeDosis++;
+                }
+            }
+            return contadorDeDosis;
         }
 
         public Dictionary<Vacuna,int> VacunasPorTipo(List<Vacuna> vacunas, List<Vacunacion> vacunaciones)

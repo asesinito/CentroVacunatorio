@@ -36,6 +36,12 @@ namespace CentroDeVacunacion
             manejoDeArchivosDePersonas.Guardar(Personas);
         }
 
+        public void EliminarRegistroDePersona(Persona persona)
+        {
+            Personas.Remove(persona);
+            manejoDeArchivosDePersonas.Guardar(Personas);
+        }
+
         public void RegistrarVacuna(Vacuna vacuna)
         {
             Vacunas.Add(vacuna);

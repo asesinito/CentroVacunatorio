@@ -196,21 +196,22 @@ namespace CentroDeVacunacion.ConsolaUI
             return true;
         }
 
-        public void BuscarPersonasPorDNI(List<Persona> personas)
+        public void BuscarPersonasPorDNI(List<Persona> personas, CentroVacunatorio centroVacunatorio)
         {
-            int dni = 0;
+            string respuesta = "";
             bool aux = false;
-            
-            try 
-            { 
-                Console.Clear();
-                Console.WriteLine("Ingrese el DNI a buscar");
-                Console.WriteLine("Debe ingresar los numeros sin signos de puntuacion!\n");
-                dni = int.Parse(Console.ReadLine());
 
-                foreach(Persona persona in personas)
+            while (!aux)
+            {
+                try
                 {
-                    if(persona.Dni == dni)
+                    Console.Clear();
+                    Console.WriteLine("Ingrese el DNI a buscar");
+                    Console.WriteLine("Debe ingresar los numeros sin signos de puntuacion!\n");
+                    int dni = int.Parse(Console.ReadLine());
+                    Persona persona = BuscarPersonaEnRegistro(dni, personas);
+
+                    if(persona != null)
                     {
                         Console.WriteLine($"\nApellido: {persona.Apellido} - Nombre: {persona.Nombre} - Fecha de Nacimiento {persona.FechaDeNacimiento:dd/MM/yyyy}");
                         Console.WriteLine($"Pais de Origen: {persona.Nacionalidad} - Provincia: {persona.Direccion.Provincia} - Ciudad: {persona.Direccion.Ciudad} - Direccion: {persona.Direccion.Calle} {persona.Direccion.Numero}");
@@ -219,8 +220,8 @@ namespace CentroDeVacunacion.ConsolaUI
                         Console.WriteLine("\nRegistro de vacunacion");
                         Console.WriteLine("----------------------------------------------------------");
 
-                        if(persona.Vacunaciones.Count > 0) 
-                        { 
+                        if (persona.Vacunaciones.Count > 0)
+                        {
                             foreach (Vacunacion vacunacion in persona.Vacunaciones)
                             {
                                 Console.WriteLine($"\n{vacunacion.Vacuna.Nombre} - Dosis -{vacunacion.Dosis} - {vacunacion.FechaYHoraDeVacunacion}");
@@ -231,15 +232,40 @@ namespace CentroDeVacunacion.ConsolaUI
                         {
                             Console.WriteLine("No se encuentra registro de vacunacion");
                         }
+                        Console.ReadKey();
+                        aux = true;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"La persona correspondiente al DNI {dni} no se encuentra registrda.");
+                        Console.WriteLine("Desea registrar una nueva persona?[Si/No]");
+                        respuesta = Console.ReadLine();
+                        aux = true;
+                        if (respuesta == "Si" || respuesta == "si")
+                        {
+                            IngresarPersona(centroVacunatorio);
+                        }
                     }
                 }
-                Console.ReadKey();
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Debe ingresar una opcion valida");
+                    Console.ReadKey();
+                }
             }
-            catch (Exception ex)
+            
+        }
+        public Persona BuscarPersonaEnRegistro(int dni, List<Persona> personas)
+        {
+            foreach (Persona persona in personas)
             {
-                Console.WriteLine("Debe ingresar un numero de documento valido");
-                Console.ReadKey();  
+                if (persona.Dni == dni)
+                {
+                    return persona;
+                }
             }
+            return null;
         }
 
         public void ListarPersonas(List<Persona> personas)

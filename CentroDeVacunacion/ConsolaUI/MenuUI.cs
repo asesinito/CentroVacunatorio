@@ -27,11 +27,12 @@ namespace CentroDeVacunacion.ConsolaUI
                 Console.WriteLine("3. Ver registro de Personas");
                 Console.WriteLine("4. Ingresar nueva vacuna al registro");
                 Console.WriteLine("5. Ver vacunas registradas");
-                Console.WriteLine("6. Ver dosis aplicadas");
-                Console.WriteLine("7. Buscar persona por DNI\n");
+                Console.WriteLine("6. Ver dosis totales aplicadas por vacuna");
+                Console.WriteLine("7. Buscar persona por DNI");
+                Console.WriteLine("8. Ver Dosis aplicadas entre fechas\n");
                 Console.WriteLine("0. Salir");
 
-                int opcion = this.LeerOpcionValida(new List<int>() { 1, 2, 3, 4, 5, 6, 7, 0 });
+                int opcion = this.LeerOpcionValida(new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 0 });
 
                 switch (opcion)
                 {
@@ -42,7 +43,7 @@ namespace CentroDeVacunacion.ConsolaUI
                         }
                     case 2:
                         {
-                            this.IngresarPersona(centroVacunatorio.Vacunas);
+                            VacunarPersonaRegistrada(centroVacunatorio);
                             break;
                         }
                     case 3:
@@ -70,6 +71,11 @@ namespace CentroDeVacunacion.ConsolaUI
                             BuscarPersonaPorDNI();
                             break;
                         }
+                    case 8:
+                        {
+                            MostrarDosisEntreFechas();
+                            break;
+                        }
                     case 0:
                         {
                             Console.WriteLine("\nMuchas gracias por utilizar nuestro sistema.");
@@ -83,29 +89,33 @@ namespace CentroDeVacunacion.ConsolaUI
 
         private void IngresarPersona(List<Vacuna> vacunasRegistradas)
         {
-            Persona nuevaPersona = this.personaIO.IngresarPersona(centroVacunatorio);
-            this.centroVacunatorio.RegistrarPersona(nuevaPersona);
+            Persona nuevaPersona = personaIO.IngresarPersona(centroVacunatorio);
+            centroVacunatorio.RegistrarPersona(nuevaPersona);
+        }
+        private void VacunarPersonaRegistrada(CentroVacunatorio centroVacunatorio)
+        {
+            vacunacionIO.AgregarVacunacionesAPersonasEnRegistro(personaIO , centroVacunatorio.Personas, centroVacunatorio.Vacunas, centroVacunatorio);
         }
 
         private void ListarPersonas()
         {
-            this.personaIO.ListarPersonas(this.centroVacunatorio.Personas);
+            personaIO.ListarPersonas(centroVacunatorio.Personas);
         }
 
         private void BuscarPersonaPorDNI()
         {
-            personaIO.BuscarPersonasPorDNI(centroVacunatorio.Personas);
+            personaIO.BuscarPersonasPorDNI(centroVacunatorio.Personas, centroVacunatorio);
         }
 
         private void IngresarVacuna()
         {
-            Vacuna nuevaVacuna = this.vacunaIO.IngresarVacuna();
-            this.centroVacunatorio.RegistrarVacuna(nuevaVacuna);
+            Vacuna nuevaVacuna = vacunaIO.IngresarVacuna();
+            centroVacunatorio.RegistrarVacuna(nuevaVacuna);
         }
 
         private void ListarVacuna()
         {
-            this.vacunaIO.ListarVacunas(this.centroVacunatorio.Vacunas);
+            vacunaIO.ListarVacunas(centroVacunatorio.Vacunas);
         }
        
         private void DosisSegunTipoDeVacuna()
@@ -119,6 +129,12 @@ namespace CentroDeVacunacion.ConsolaUI
                 Console.WriteLine($"{vacuna.Key.Nombre} - Dosis Aplicadas: {vacuna.Value}");
             }
             Console.ReadKey();
+        }
+
+        private void MostrarDosisEntreFechas()
+        {
+            List<Vacunacion> vacunacionesSegunFecha = centroVacunatorio.Personas.SelectMany(x => x.Vacunaciones).ToList();
+            vacunacionIO.MostrarDosisAplicadasEntreDosFechas(vacunacionesSegunFecha);
         }
 
         private int LeerOpcionValida(List<int> opcionesValidas)
